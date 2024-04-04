@@ -101,7 +101,7 @@ public ActionResult Logout()
     return RedirectToAction("Login", "Account"); // Redirect to login page
 }
 Remember, this is a basic example. In a real-world application, you would use proper password hashing techniques, error handling, and additional security measures. Additionally, managing sessions manually may not be the best approach in all cases; you may consider using ASP.NET Identity or other authentication frameworks for more robust authentication and authorization.
-
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 without json file check manually
 ChatGPT
 If you want to check the username and password without using a JSON file, you can directly compare the provided credentials with hard-coded values in your ASP.NET MVC application. While this is not a recommended approach for production applications due to security reasons (hard-coded credentials are inherently insecure), it can be useful for learning purposes or for small-scale applications.
@@ -153,7 +153,7 @@ public class AccountController : Controller
 In this example, the IsValidCredential method checks if the provided username and password match the hard-coded values "user" and "password". If they match, the method returns true, indicating that the credentials are valid.
 
 Again, please note that hard-coding credentials is not recommended for production applications as it poses a significant security risk. Always use secure authentication mechanisms like ASP.NET Identity or OAuth for production applications.
-
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 try using ajax
 ChatGPT
 Sure, I'll show you how to perform the login functionality using AJAX in an ASP.NET MVC application. This approach will allow you to asynchronously check the username and password without reloading the entire page.
@@ -254,3 +254,61 @@ public class AccountController : Controller
 In this controller action, we return a JSON object indicating whether the login was successful or not.
 
 That's it! With these changes, your ASP.NET MVC application will perform the login functionality using AJAX.
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+<script type="text/javascript">
+    $(function () {
+        LoadData();
+        $("#btnSave").click(function () {
+            //alert("");
+            var std = {};
+            std.studentName = $("#StudentName").val();
+            std.studentAddress = $("#StudentAddress").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("createStudent")',
+                data: '{std: ' + JSON.stringify(std) + '}',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function () {
+                   // alert("Data has been added successfully.");
+                    LoadData();
+                },
+                error: function () {
+                    alert("Error while inserting data");
+                }
+            });
+            return false;
+        });
+    });
+
+    function LoadData() {
+        $("#tblStudent tbody tr").remove();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getStudent")',
+            dataType: 'json',
+            data: { id: '' },
+            success: function (data) {
+                var items = '';
+                $.each(data, function (i, item) {
+                    var rows = "<tr>"
+                    + "<td class='prtoducttd'>" + item.studentID + "</td>"
+                    + "<td class='prtoducttd'>" + item.studentName + "</td>"
+                    + "<td class='prtoducttd'>" + item.studentAddress + "</td>"
+                    + "</tr>";
+                    $('#tblStudent tbody').append(rows);
+                });
+            },
+            error: function (ex) {
+                var r = jQuery.parseJSON(response.responseText);
+                alert("Message: " + r.Message);
+                alert("StackTrace: " + r.StackTrace);
+                alert("ExceptionType: " + r.ExceptionType);
+            }
+        });
+        return false;
+    }
+    </script>
