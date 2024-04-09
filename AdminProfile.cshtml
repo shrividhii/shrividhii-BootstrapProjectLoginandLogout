@@ -20,29 +20,24 @@
         </div>
 
         <div class="offset-1 col-lg-10" id="bbtn">
-            <button class="btn2">Logout</button>
+            <button class="btn2" onclick="logout()">Logout</button>
         </div>
-    </section>
-</body>
-<script>
-    function checkLoggedIn() {
-    var cookies = document.cookie.split(';');
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i].trim();
-      if (cookie.startsWith("user=true")) {
-        return true;
-      }
-    }
-    return false;
-  }
 
-  if (!checkLoggedIn()) {
-    // window.alert("You do donthave acces")
-    window.location.href = "index.html";
-  }
-  const logbtn = document.querySelector(".btn2")
-  logbtn.addEventListener("click",()=>{
-window.location.replace("login.html")
-  })
-</script>
-</html>
+        <div class="offset-1 col-lg-10" id="bbtn">
+            <button class="btn2" onclick="details()">Details</button>
+        </div>
+
+    </section>
+    <script>
+        function logout()
+        {
+            window.location.href = '@Url.Action("Logout","User")';
+        }
+
+        function details()
+        {
+            window.location.href = '@Url.Action("Details","User")';
+        }
+    </script>
+</body>
+    </html>

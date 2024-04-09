@@ -1,8 +1,8 @@
-﻿using project_vidhi.Models;
+﻿using Npgsql;
+using project_vidhi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data;
 using System.Web.Mvc;
 
 namespace project_vidhi.Controllers
@@ -18,32 +18,46 @@ namespace project_vidhi.Controllers
         {
             return View();
         }
-        public ActionResult Submit(LoginAuthentication model)
-        {
-            LoginAuthentication la = new LoginAuthentication();
-            la.Username = model.Username;
-            la.Password = model.Password;
-
-            if(la.Username=="vidhi" && la.Password=="vidhi1234")
-                return RedirectToAction("UserProfile","UserController");
-            else if(la.Username=="admin" &&  la.Password=="admin")
-                return RedirectToAction("AdminProfile","UserController");
-            return RedirectToAction("Index","UserController");     
-        }
         public ActionResult UserProfile()
         {
-            
-            return View();
+            if (!string.IsNullOrEmpty(Session["Username"].ToString())) return RedirectToAction("Login");            
+            else return View();
         }
 
         public ActionResult AdminProfile()
         {
-            return View();
+            if (Session["Username"] == null)  return RedirectToAction("Login");            
+            else return View();
         }
 
         public ActionResult Logout()
         {
-            return View();
+            Session.Remove("Username");
+            Session.Abandon();
+            Session.Clear();
+            return RedirectToAction("Login");
+        }
+        public ActionResult Details() 
+        {
+            List<LoginAuthentication> displayuser = new List<LoginAuthentication>();
+            NpgsqlConnection conn = new NpgsqlConnection("Server=192.168.61.227; Port=5432; Database=Trainee_Test; User Id=Trainee; Password=Trainee@123;");
+            conn.Open();
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "select * from public.\"Vidhi\"";
+
+            NpgsqlDataReader reader = cmd.ExecuteReader();
+
+            while(reader.Read())
+            {
+                var user = new LoginAuthentication();
+                user.Username = Convert.ToString(reader["username"]);
+                user.Password = Convert.ToString(reader["password"]);
+                displayuser.Add(user);
+            }
+            
+            return View(displayuser);
         }
     }
 }

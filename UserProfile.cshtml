@@ -17,35 +17,19 @@
     <section>
 
         <div>
-            <img src="~/Butterfly/user.png" class="userimg" alt="image">
+            <img src="~/Butterfly/user.jpg" class="userimg" alt="image">
         </div>
 
         <div class="offset-1 col-lg-10" id="bbtn">
-            <button class="btn2">Logout</button>
+            <button class="btn2" onclick="logout()">Logout</button>
         </div>
     </section>
-</body>
-<script>
-    function checkLoggedIn() {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            if (cookie.startsWith("user=true")) {
-                return true;
-            }
+    <script>
+        function logout()
+        {
+           window.history.forward();
+           window.location.href = '@Url.Action("Logout","User")';
         }
-        return false;
-    }
-
-    if (!checkLoggedIn()) {
-        // window.alert("You do donthave acces")
-        window.location.href = "index.html";
-    }
-    const logbtn = document.querySelector(".btn2")
-    logbtn.addEventListener("click", () => {
-        window.location.replace("login.html")
-    })
-</script>
+    </script>
+</body>
 </html>
-
-
